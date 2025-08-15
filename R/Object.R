@@ -183,7 +183,7 @@ copyAndromeda <- function(andromeda, options = list()) {
   attr(class(andromeda), "package") <- "Andromeda"
   andromeda@dbname <- andromeda@driver@dbdir
   finalizer <- function(conn_ref) {
-    cat("Finalizer called")
+    message(paste0("Andromeda finalizer DEBUG - DB Name: ", andromeda@dbname))
     # Suppress R Check note about unused argument:
     missing(conn_ref)
     # Use R's scoping rules to refer the andromeda object we want to close without explicitly passing it as an argument:
