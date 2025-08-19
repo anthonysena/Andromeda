@@ -188,7 +188,8 @@ copyAndromeda <- function(andromeda, options = list()) {
     # Suppress R Check note about unused argument:
     missing(conn_ref)
     # Use R's scoping rules to refer the andromeda object we want to close without explicitly passing it as an argument:
-    close(andromeda)
+    # AGS: Prevent the closing of the object upon finalizing
+    # close(andromeda)
   }
   reg.finalizer(andromeda@conn_ref, finalizer, onexit = TRUE)
   
