@@ -149,6 +149,7 @@ copyAndromeda <- function(andromeda, options = list()) {
 
   if (.Platform$OS.type == "windows") {
     # On windows, avoid attaching to a locked database file
+    message(paste0("DEBUG: Andromeda::copyAndromeda ", andromeda@dbname))
     for (table in tables) {
       tempFile <- tempfile(tmpdir = .getAndromedaTempFolder(), fileext = ".parquet")
       DBI::dbExecute(andromeda, 
@@ -183,7 +184,7 @@ copyAndromeda <- function(andromeda, options = list()) {
   attr(class(andromeda), "package") <- "Andromeda"
   andromeda@dbname <- andromeda@driver@dbdir
   finalizer <- function(conn_ref) {
-    message(paste0("Andromeda finalizer DEBUG - DB Name: ", andromeda@dbname))
+    message(paste0("DEBUG Andromeda finalizer - DB Name: ", andromeda@dbname))
     # Suppress R Check note about unused argument:
     missing(conn_ref)
     # Use R's scoping rules to refer the andromeda object we want to close without explicitly passing it as an argument:
@@ -312,6 +313,7 @@ setMethod("[[<-", "Andromeda", function(x, i, value) {
         # compute first to a temp parquet file
         tempFile <- tempfile(tmpdir = .getAndromedaTempFolder(),
                              fileext = ".parquet")
+        message(paste0("DEBUG: Andromeda init - valueSourceFile: ", valueSourceFile, "; sourceTableName: ", sourceTableName))
         DBI::dbExecute(
           dbplyr::remote_con(value),
           sprintf(
@@ -536,6 +538,7 @@ setMethod("close", "Andromeda", function(con, ...) {
     duckdb::dbDisconnect(con, shutdown = TRUE)
   }
   if (file.exists(fileName)) {
+    message(paste0("DEBUG Andromeda::close: ", fileName))
     unlink(fileName)
   }
 })
